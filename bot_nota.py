@@ -176,7 +176,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(welcome_text, parse_mode='Markdown')
 
 async def buat_nota(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Handler untuk command /buat_nota"""
+    """Handler untuk command /buatnota"""
     user_id = update.effective_user.id
     
     # Inisialisasi session
