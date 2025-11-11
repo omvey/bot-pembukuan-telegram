@@ -183,11 +183,11 @@ def format_nota_penjualan(data):
     nota_text += f"📋 *No: {data['nomor_nota']}*\n"
     nota_text += f"👤 *Pelanggan: {data['nama_pelanggan']}*\n"
     nota_text += f"📅 *Tanggal: {data['tanggal']}*\n"
-    nota_text += "─" * 28 + "\n\n"
+    nota_text += "─" * 27 + "\n\n"
     
     # Header tabel barang
     nota_text += "📦 *DAFTAR BARANG:*\n"
-    nota_text += "┌" + "─" * 26 + "┐\n"
+    nota_text += "┌" + "─" * 25 + "┐\n"
     
     # Daftar barang dengan format kolom
     for i, item in enumerate(data['daftar_barang'], 1):
@@ -203,12 +203,12 @@ def format_nota_penjualan(data):
         nota_text += baris_nama
         nota_text += baris_detail
     
-    nota_text += "└" + "─" * 26 + "┘\n"
+    nota_text += "└" + "─" * 25 + "┘\n"
     
     # Barang retur (jika ada)
     if data['retur_items']:
         nota_text += "\n🔄 *BARANG RETUR:*\n"
-        nota_text += "┌" + "─" * 26 + "┐\n"
+        nota_text += "┌" + "─" * 25 + "┐\n"
         
         for i, item in enumerate(data['retur_items'], 1):
             nama_barang = item['nama']
@@ -223,10 +223,10 @@ def format_nota_penjualan(data):
             nota_text += baris_nama
             nota_text += baris_detail
         
-        nota_text += "└" + "─" * 26 + "┘\n"
+        nota_text += "└" + "─" * 25 + "┘\n"
     
     # Ringkasan pembayaran
-    nota_text += "\n" + "─" * 28 + "\n"
+    nota_text += "\n" + "─" * 27 + "\n"
     nota_text += "💰 *RINGKASAN PEMBAYARAN:*\n"
     
     # Hitung total
