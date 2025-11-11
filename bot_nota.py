@@ -172,7 +172,7 @@ def buat_keyboard_opsi(tambah_selesai=False, dengan_retur=False):
 def format_nota_penjualan(data):
     """Format nota penjualan menjadi teks"""
     nota_text = f"""
-🛒 *NOTA PENJUALAN*
+        *NOTA PENJUALAN*       
 
 📋 *No: {data['nomor_nota']}*
 👤 *Pelanggan: {data['nama_pelanggan']}*
