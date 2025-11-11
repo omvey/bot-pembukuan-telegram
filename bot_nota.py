@@ -170,39 +170,93 @@ def buat_keyboard_opsi(tambah_selesai=False, dengan_retur=False):
     return InlineKeyboardMarkup(keyboard)
 
 def format_nota_penjualan(data):
-    """Format nota penjualan menjadi teks"""
-    nota_text = f"""
-        *NOTA PENJUALAN*       
+    """Format nota penjualan menjadi teks dengan format kolom yang rapi"""
+    
+    # Header nota
+    nota_text = """
+🛒 *NOTA PENJUALAN*
+*Kacang Bawang Berkah Dua Putri*
 
-📋 *No: {data['nomor_nota']}*
-👤 *Pelanggan: {data['nama_pelanggan']}*
-📅 *Tanggal: {data['tanggal']}*
-
-📦 *DAFTAR BARANG:*
 """
     
-    for item in data['daftar_barang']:
-        nota_text += f"• {item['nama']}\n"
-        nota_text += f"  {item['qty']} x {format_rupiah(item['harga'])} = {format_rupiah(item['subtotal'])}\n"
+    # Informasi dasar nota
+    nota_text += f"📋 *No: {data['nomor_nota']}*\n"
+    nota_text += f"👤 *Pelanggan: {data['nama_pelanggan']}*\n"
+    nota_text += f"📅 *Tanggal: {data['tanggal']}*\n"
+    nota_text += "─" * 40 + "\n\n"
     
+    # Header tabel barang
+    nota_text += "📦 *DAFTAR BARANG:*\n"
+    nota_text += "┌" + "─" * 38 + "┐\n"
+    
+    # Daftar barang dengan format kolom
+    for i, item in enumerate(data['daftar_barang'], 1):
+        nama_barang = item['nama']
+        qty = f"{item['qty']}x"
+        harga_satuan = format_rupiah(item['harga'])
+        subtotal = format_rupiah(item['subtotal'])
+        
+        # Format baris barang
+        baris_nama = f"│ {i:2d}. {nama_barang:<20} │\n"
+        baris_detail = f"│     {qty:>4} @ {harga_satuan:>12} = {subtotal:>12} │\n"
+        
+        nota_text += baris_nama
+        nota_text += baris_detail
+    
+    nota_text += "└" + "─" * 38 + "┘\n"
+    
+    # Barang retur (jika ada)
     if data['retur_items']:
         nota_text += "\n🔄 *BARANG RETUR:*\n"
-        for item in data['retur_items']:
-            nota_text += f"• {item['nama']}\n"
-            nota_text += f"  {item['qty']} x {format_rupiah(item['harga'])} = {format_rupiah(item['subtotal'])}\n"
+        nota_text += "┌" + "─" * 38 + "┐\n"
+        
+        for i, item in enumerate(data['retur_items'], 1):
+            nama_barang = item['nama']
+            qty = f"{item['qty']}x"
+            harga_satuan = format_rupiah(item['harga'])
+            subtotal = format_rupiah(item['subtotal'])
+            
+            # Format baris retur
+            baris_nama = f"│ {i:2d}. {nama_barang:<20} │\n"
+            baris_detail = f"│     {qty:>4} @ {harga_satuan:>12} = {subtotal:>12} │\n"
+            
+            nota_text += baris_nama
+            nota_text += baris_detail
+        
+        nota_text += "└" + "─" * 38 + "┘\n"
     
-    nota_text += f"\n💰 *TOTAL: {format_rupiah(data['total_setelah_retur'])}*"
-    nota_text += f"\n💵 *BAYAR: {format_rupiah(data['bayar'])}*"
+    # Ringkasan pembayaran
+    nota_text += "\n" + "─" * 40 + "\n"
+    nota_text += "💰 *RINGKASAN PEMBAYARAN:*\n"
+    
+    # Hitung total
+    total_barang = sum(item['subtotal'] for item in data['daftar_barang'])
+    total_retur = sum(item['subtotal'] for item in data['retur_items'])
+    total_setelah_retur = total_barang - total_retur
+    
+    # Format ringkasan dengan alignment
+    nota_text += f"Total Barang    : {format_rupiah(total_barang):>15}\n"
+    
+    if data['retur_items']:
+        nota_text += f"Total Retur     : {format_rupiah(total_retur):>15}\n"
+        nota_text += f"                {'':->20}>\n"
+    
+    nota_text += f"*Total Bersih*  : *{format_rupiah(total_setelah_retur):>15}*\n"
+    nota_text += f"Bayar           : {format_rupiah(data['bayar']):>15}\n"
+    nota_text += f"                {'':->20}>\n"
     
     if data['sisa'] >= 0:
-        nota_text += f"\n✅ *SISA: {format_rupiah(data['sisa'])}*"
+        nota_text += f"*Sisa*          : *{format_rupiah(data['sisa']):>15}*\n"
+        status_emoji = "✅"
     else:
-        nota_text += f"\n❌ *KURANG: {format_rupiah(-data['sisa'])}*"
+        nota_text += f"*Kurang*        : *{format_rupiah(-data['sisa']):>15}*\n"
+        status_emoji = "❌"
     
-    nota_text += f"\n\n📊 *Status: {data['status']}*"
+    nota_text += f"\n{status_emoji} *Status: {data['status']}*"
+    nota_text += "\n\n_*Terima kasih atas kepercayaannya*_ 🙏"
     
     return nota_text
-
+    
 def format_nota_belanja(data):
     """Format nota belanja menjadi teks"""
     nota_text = f"""
