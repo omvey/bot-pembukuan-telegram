@@ -183,7 +183,7 @@ def format_nota_penjualan(data):
     nota_text += f"📋 *No: {data['nomor_nota']}*\n"
     nota_text += f"👤 *Pelanggan: {data['nama_pelanggan']}*\n"
     nota_text += f"📅 *Tanggal: {data['tanggal']}*\n"
-    nota_text += "─" * 40 + "\n\n"
+    nota_text += "─" * 26 + "\n\n"
     
     # Header tabel barang
     nota_text += "📦 *DAFTAR BARANG:*\n"
