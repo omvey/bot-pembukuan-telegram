@@ -173,11 +173,8 @@ def format_nota_penjualan(data):
     """Format nota penjualan menjadi teks dengan format kolom yang rapi"""
     
     # Header nota
-    nota_text = """
-*       NOTA PENJUALAN      *
-*      Berkah Dua Putri     *
-
-"""
+    nota_text = f"{'NOTA PENJUALAN':^27}\n"
+    nota_text += f"{'Berkah Dua Putri':^27}\n"
     
     # Informasi dasar nota
     nota_text += "─" * 27 + "\n"
