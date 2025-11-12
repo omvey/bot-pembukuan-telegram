@@ -198,8 +198,8 @@ def buat_keyboard_menu_utama():
     return InlineKeyboardMarkup(keyboard)
 
 def buat_keyboard_pelanggan():
-  split = (len(DAFTAR_PELANGGAN) + 5)
     """Buat keyboard pilihan pelanggan dengan 2 kolom"""
+    split = (len(DAFTAR_PELANGGAN) + 5)
     keyboard = []
     
     # Membuat tombol dalam 2 kolom
