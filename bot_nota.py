@@ -29,7 +29,7 @@ DB_FILE = os.path.join(os.path.dirname(__file__), "keuangan.db")
 
 # Data pilihan
 DAFTAR_PELANGGAN = [
-    "UJANG", "ASEP RIDWAN", "Pelanggan Umum"
+    "ASEP RIDWAN", "UJANG", "Pelanggan Umum"
 ]
 
 DAFTAR_BARANG_PENJUALAN = [
