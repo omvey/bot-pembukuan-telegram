@@ -29,7 +29,7 @@ DB_FILE = os.path.join(os.path.dirname(__file__), "keuangan.db")
 
 # Data pilihan
 DAFTAR_PELANGGAN = [
-    "UJANG", "ASEP R", "Pelanggan Umum"
+    "UJANG", "ASEP RIDWAN", "Pelanggan Umum"
 ]
 
 DAFTAR_BARANG_PENJUALAN = [
@@ -203,7 +203,7 @@ def buat_keyboard_pelanggan():
     keyboard = []
     
     # Membuat tombol dalam 2 kolom
-    for i in range(0, 10, 2):
+    for i in range(0, len(DAFTAR_PELANGGAN), 2):
         row = []
         # Tombol pertama di baris
         row.append(InlineKeyboardButton(
