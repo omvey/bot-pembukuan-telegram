@@ -203,7 +203,7 @@ def buat_keyboard_pelanggan():
     keyboard = []
     
     # Membuat tombol dalam 2 kolom
-    for i in range(0, len(DAFTAR_PELANGGAN), 2):
+    for i in range(0, 10, 2):
         row = []
         # Tombol pertama di baris
         row.append(InlineKeyboardButton(
