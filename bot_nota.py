@@ -409,177 +409,191 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 # ===== HANDLER CALLBACK QUERY =====
-async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Handler untuk inline keyboard callback"""
-    query = update.callback_query
-    await query.answer()
+async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Handler untuk pesan teks"""
+    user_id = update.effective_user.id
+    message_text = update.message.text
     
-    user_id = query.from_user.id
-    callback_data = query.data
-    
-    logger.info(f"🔄 Callback from {user_id}: {callback_data}")
+    logger.info(f"📨 Message from {user_id}: {message_text}")
     
     if user_id not in user_sessions:
         user_sessions[user_id] = {'state': 'idle', 'data': {}}
     
     session = user_sessions[user_id]
+    state = session['state']
+    session_type = session.get('type', '')
     
-    if callback_data.startswith('menu_'):
-        # Handle menu utama
-        menu = callback_data.split('_')[1]
+    if state == 'input_nama_supplier':
+        # Simpan nama supplier
+        session['data']['nama_supplier'] = message_text
+        session['state'] = 'pilih_barang_belanja'
         
-        if menu == 'jual':
-            # Mulai proses penjualan
-            session['state'] = 'pilih_pelanggan'
-            session['type'] = 'penjualan'
-            session['data'] = {
-                'daftar_barang': [],
-                'retur_items': [],
-                'nomor_nota': buat_nomor_nota("PNJ"),
-                'tanggal': datetime.datetime.now().strftime("%d/%m/%Y")
-            }
+        await update.message.reply_text(
+            f"🏢 *Supplier:* {message_text}\n\n"
+            "📦 Pilih jenis belanja:",
+            parse_mode='Markdown',
+            reply_markup=buat_keyboard_barang_belanja()
+        )
+    
+    elif state == 'input_harga_barang':
+        # Simpan harga barang penjualan
+        try:
+            harga = int(message_text.replace(".", "").replace(",", ""))
+            session['data']['current_item']['harga'] = harga
+            session['state'] = 'input_qty_barang'
             
-            await query.edit_message_text(
-                "📝 *BUAT NOTA PENJUALAN*\n\n"
-                "Pilih nama pelanggan:",
-                parse_mode='Markdown',
-                reply_markup=buat_keyboard_pelanggan()
-            )
-            
-        elif menu == 'beli':
-            # Mulai proses belanja
-            session['state'] = 'input_nama_supplier'
-            session['type'] = 'belanja'
-            session['data'] = {
-                'daftar_barang': [],
-                'nomor_nota': buat_nomor_nota("BLJ"),
-                'tanggal': datetime.datetime.now().strftime("%d/%m/%Y")
-            }
-            
-            await query.edit_message_text(
-                "🛍️ *BUAT NOTA BELANJA*\n\n"
-                "Masukkan nama supplier:",
+            await update.message.reply_text(
+                f"💰 *Harga:* {format_rupiah(harga)}\n\n"
+                "Masukkan jumlah barang:",
                 parse_mode='Markdown'
             )
+        except ValueError:
+            await update.message.reply_text("❌ Masukkan angka yang valid!")
+    
+    elif state == 'input_qty_barang':
+        # Simpan quantity barang penjualan
+        try:
+            qty = int(message_text)
+            if qty <= 0:
+                await update.message.reply_text("❌ Jumlah harus lebih dari 0!")
+                return
             
-        elif menu == 'histori':
-            # Tampilkan pilihan histori
-            await query.edit_message_text(
-                "📊 *PILIH HISTORI*\n\n"
-                "Pilih berdasarkan pelanggan:",
+            current_item = session['data']['current_item']
+            current_item['qty'] = qty
+            current_item['subtotal'] = current_item['harga'] * qty
+            
+            # Tambahkan ke daftar barang
+            session['data']['daftar_barang'].append(current_item)
+            
+            # Reset current item
+            session['data']['current_item'] = {}
+            session['state'] = 'pilih_tambah_barang_penjualan'
+            
+            # Tampilkan ringkasan sementara
+            total_sementara = sum(item['subtotal'] for item in session['data']['daftar_barang'])
+            
+            summary_text = f"✅ *Barang ditambahkan:*\n{current_item['nama']}\nQty: {qty} x {format_rupiah(current_item['harga'])} = {format_rupiah(current_item['subtotal'])}\n\n"
+            summary_text += f"💰 *Total sementara:* {format_rupiah(total_sementara)}\n\n"
+            summary_text += "Pilih opsi di bawah:"
+            
+            # Buat keyboard untuk pilihan selanjutnya
+            keyboard = [
+                [InlineKeyboardButton("➕ Tambah Barang Lain", callback_data="tambah_barang_penjualan")],
+                [InlineKeyboardButton("✅ Selesai Tambah Barang", callback_data="selesai_barang_penjualan")],
+                [InlineKeyboardButton("🚫 Batalkan", callback_data="cancel")]
+            ]
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            
+            await update.message.reply_text(
+                summary_text,
                 parse_mode='Markdown',
-                reply_markup=buat_keyboard_histori_pelanggan()
+                reply_markup=reply_markup
             )
             
-        elif menu == 'statistik':
-            # Tampilkan statistik
-            await tampilkan_statistik(query)
+        except ValueError:
+            await update.message.reply_text("❌ Masukkan angka yang valid!")
+    
+    elif state == 'input_harga_barang_belanja':
+        # Simpan harga barang belanja
+        try:
+            harga = int(message_text.replace(".", "").replace(",", ""))
+            session['data']['current_item']['harga'] = harga
+            session['state'] = 'input_qty_barang_belanja'
             
-        elif menu == 'info':
-            # Tampilkan info
-            info_text = """
-ℹ️ *INFORMASI BOT*
-
-*Kacang Bawang Berkah Dua Putri*
-📍 Cikupa Werasari Sadananya Ciamis
-
-*Fitur:*
-• Buat nota penjualan dengan retur
-• Buat nota belanja 
-• Simpan histori transaksi
-• Statistik penjualan & belanja
-
-*Version:* 2.0
-*Host:* Railway
-"""
-            await query.edit_message_text(info_text, parse_mode='Markdown')
+            await update.message.reply_text(
+                f"💰 *Harga:* {format_rupiah(harga)}\n\n"
+                "Masukkan jumlah barang:",
+                parse_mode='Markdown'
+            )
+        except ValueError:
+            await update.message.reply_text("❌ Masukkan angka yang valid!")
     
-    elif callback_data.startswith('pelanggan_'):
-        # Handle pilihan pelanggan
-        pelanggan_index = int(callback_data.split('_')[1]) - 1
-        nama_pelanggan = DAFTAR_PELANGGAN[pelanggan_index]
-        
-        session['data']['nama_pelanggan'] = nama_pelanggan
-        session['state'] = 'pilih_barang_penjualan'
-        
-        await query.edit_message_text(
-            f"👤 *Pelanggan:* {nama_pelanggan}\n\n"
-            "📦 Pilih barang yang dijual:",
-            parse_mode='Markdown',
-            reply_markup=buat_keyboard_barang_penjualan()
-        )
+    elif state == 'input_qty_barang_belanja':
+        # Simpan quantity barang belanja
+        try:
+            qty = int(message_text)
+            if qty <= 0:
+                await update.message.reply_text("❌ Jumlah harus lebih dari 0!")
+                return
+            
+            current_item = session['data']['current_item']
+            current_item['qty'] = qty
+            current_item['subtotal'] = current_item['harga'] * qty
+            
+            # Tambahkan ke daftar barang
+            session['data']['daftar_barang'].append(current_item)
+            
+            # Reset current item
+            session['data']['current_item'] = {}
+            session['state'] = 'pilih_tambah_barang_belanja'
+            
+            # Tampilkan ringkasan sementara
+            total_sementara = sum(item['subtotal'] for item in session['data']['daftar_barang'])
+            
+            summary_text = f"✅ *Barang ditambahkan:*\n{current_item['nama']}\nQty: {qty} x {format_rupiah(current_item['harga'])} = {format_rupiah(current_item['subtotal'])}\n\n"
+            summary_text += f"💰 *Total sementara:* {format_rupiah(total_sementara)}\n\n"
+            summary_text += "Pilih opsi di bawah:"
+            
+            # Buat keyboard untuk pilihan selanjutnya
+            keyboard = [
+                [InlineKeyboardButton("➕ Tambah Barang Lain", callback_data="tambah_barang_belanja")],
+                [InlineKeyboardButton("✅ Selesai Tambah Barang", callback_data="selesai_barang_belanja")],
+                [InlineKeyboardButton("🚫 Batalkan", callback_data="cancel")]
+            ]
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            
+            await update.message.reply_text(
+                summary_text,
+                parse_mode='Markdown',
+                reply_markup=reply_markup
+            )
+            
+        except ValueError:
+            await update.message.reply_text("❌ Masukkan angka yang valid!")
     
-    elif callback_data.startswith('barang_jual_'):
-        # Handle pilihan barang penjualan
-        barang_index = int(callback_data.split('_')[2]) - 1
-        nama_barang = DAFTAR_BARANG_PENJUALAN[barang_index]
-        
-        session['data']['current_item'] = {'nama': nama_barang}
-        session['state'] = 'input_harga_barang'
-        
-        await query.edit_message_text(
-            f"📦 *Barang:* {nama_barang}\n\n"
-            "Masukkan harga satuan:",
-            parse_mode='Markdown'
-        )
+    elif state == 'input_total_belanja':
+        # Handle input total belanja
+        try:
+            total_belanja = int(message_text.replace(".", "").replace(",", ""))
+            
+            # Simpan dan proses nota belanja
+            session['data']['total_belanja'] = total_belanja
+            
+            # Simpan ke database
+            success = simpan_nota_belanja(
+                user_id=user_id,
+                nomor_nota=session['data']['nomor_nota'],
+                nama_supplier=session['data']['nama_supplier'],
+                tanggal=session['data']['tanggal'],
+                daftar_barang=session['data']['daftar_barang'],
+                total_belanja=total_belanja,
+                keterangan=""
+            )
+            
+            if success:
+                # Kirim nota
+                session['data']['keterangan'] = ""
+                nota_text = format_nota_belanja(session['data'])
+                await update.message.reply_text(nota_text, parse_mode='Markdown')
+                
+                # Reset session
+                session['state'] = 'idle'
+                if user_id in user_sessions:
+                    del user_sessions[user_id]
+            else:
+                await update.message.reply_text("❌ Gagal menyimpan nota!")
+            
+        except ValueError:
+            await update.message.reply_text("❌ Masukkan angka yang valid!")
     
-    elif callback_data.startswith('barang_beli_'):
-        # Handle pilihan barang belanja
-        barang_index = int(callback_data.split('_')[2]) - 1
-        nama_barang = DAFTAR_BARANG_BELANJA[barang_index]
-        
-        session['data']['current_item'] = {'nama': nama_barang}
-        session['state'] = 'input_harga_barang_belanja'
-        
-        await query.edit_message_text(
-            f"📦 *Barang:* {nama_barang}\n\n"
-            "Masukkan harga satuan:",
-            parse_mode='Markdown'
-        )
-    
-    elif callback_data.startswith('bayar_pas_'):
-        # Handle bayar pas
-        nominal = int(callback_data.split('_')[2])
-        await proses_pembayaran(query, session, nominal)
-    
-    elif callback_data.startswith('bayar_nominal_'):
-        # Handle bayar dengan nominal tertentu
-        nominal = int(callback_data.split('_')[2])
-        await proses_pembayaran(query, session, nominal)
-    
-    elif callback_data == 'bayar_manual':
+    elif state == 'input_bayar_manual':
         # Handle input manual pembayaran
-        session['state'] = 'input_bayar_manual'
-        
-        total_barang = sum(item['subtotal'] for item in session['data']['daftar_barang'])
-        total_retur = sum(item['subtotal'] for item in session['data']['retur_items'])
-        total_setelah_retur = total_barang - total_retur
-        
-        await query.edit_message_text(
-            f"💰 *Total yang harus dibayar:* {format_rupiah(total_setelah_retur)}\n\n"
-            "Masukkan jumlah pembayaran:",
-            parse_mode='Markdown'
-        )
-    
-    elif callback_data.startswith('histori_pelanggan_'):
-        # Handle histori berdasarkan pelanggan
-        pelanggan_index = int(callback_data.split('_')[2]) - 1
-        nama_pelanggan = DAFTAR_PELANGGAN[pelanggan_index]
-        await tampilkan_histori_pelanggan(query, user_id, nama_pelanggan)
-    
-    elif callback_data == 'histori_semua':
-        # Handle semua histori
-        await tampilkan_histori_semua(query, user_id)
-    
-    elif callback_data == 'cancel':
-        # Batalkan proses
-        session['state'] = 'idle'
-        if user_id in user_sessions:
-            del user_sessions[user_id]
-        await query.edit_message_text(
-            "❌ Proses dibatalkan",
-            reply_markup=buat_keyboard_menu_utama()
-        )
+        try:
+            nominal_bayar = int(message_text.replace(".", "").replace(",", ""))
+            await proses_pembayaran_message(update, session, nominal_bayar)
+            
+        except ValueError:
+            await update.message.reply_text("❌ Masukkan angka yang valid!")
 
 async def proses_pembayaran(query, session, nominal_bayar):
     """Proses pembayaran dan simpan nota"""
