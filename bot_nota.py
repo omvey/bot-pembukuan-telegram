@@ -198,11 +198,30 @@ def buat_keyboard_menu_utama():
     return InlineKeyboardMarkup(keyboard)
 
 def buat_keyboard_pelanggan():
-    """Buat keyboard pilihan pelanggan"""
+    """Buat keyboard pilihan pelanggan dengan 2 kolom"""
     keyboard = []
-    for i, pelanggan in enumerate(DAFTAR_PELANGGAN, 1):
-        keyboard.append([InlineKeyboardButton(f"{i}. {pelanggan}", callback_data=f"pelanggan_{i}")])
+    
+    # Membuat tombol dalam 2 kolom
+    for i in range(0, len(DAFTAR_PELANGGAN), 2):
+        row = []
+        # Tombol pertama di baris
+        row.append(InlineKeyboardButton(
+            f"{i+1}. {DAFTAR_PELANGGAN[i]}", 
+            callback_data=f"pelanggan_{i+1}"
+        ))
+        
+        # Tombol kedua di baris (jika ada)
+        if i + 1 < len(DAFTAR_PELANGGAN):
+            row.append(InlineKeyboardButton(
+                f"{i+2}. {DAFTAR_PELANGGAN[i+1]}", 
+                callback_data=f"pelanggan_{i+2}"
+            ))
+        
+        keyboard.append(row)
+    
+    # Tambahkan tombol cancel di baris terakhir
     keyboard.append([InlineKeyboardButton("🚫 Batalkan", callback_data="cancel")])
+    
     return InlineKeyboardMarkup(keyboard)
 
 def buat_keyboard_barang_penjualan(nama_pelanggan=""):
@@ -410,10 +429,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     }
     
     welcome_text = """
-🤖 *BOT MANAJEMEN KEUANGAN*
+*BOT MANAJEMEN KEUANGAN*
 *Kacang Bawang Berkah Dua Putri*
-
-*Pilih menu di bawah:*
 """
     
     await update.message.reply_text(
