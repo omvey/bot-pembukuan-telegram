@@ -199,11 +199,11 @@ def buat_keyboard_menu_utama():
 
 def buat_keyboard_pelanggan():
     """Buat keyboard pilihan pelanggan dengan 2 kolom"""
-    split = (len(DAFTAR_PELANGGAN) + 5)
+    
     keyboard = []
     
     # Membuat tombol dalam 2 kolom
-    for i in range(0, split, 2):
+    for i in range(0, len(DAFTAR_PELANGGAN), 2):
         row = []
         # Tombol pertama di baris
         row.append(InlineKeyboardButton(
