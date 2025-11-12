@@ -174,12 +174,13 @@ def format_nota_penjualan(data):
     
     # Header nota
     nota_text = """
-🛒 *NOTA PENJUALAN*
-*Kacang Bawang Berkah Dua Putri*
+*       NOTA PENJUALAN      *
+*      Berkah Dua Putri     *
 
 """
     
     # Informasi dasar nota
+    nota_text += "─" * 27 + "\n"
     nota_text += f"📋 *No: {data['nomor_nota']}*\n"
     nota_text += f"👤 *Pelanggan: {data['nama_pelanggan']}*\n"
     nota_text += f"📅 *Tanggal: {data['tanggal']}*\n"
