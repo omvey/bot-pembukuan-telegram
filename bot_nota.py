@@ -181,7 +181,6 @@ def get_harga_renceng_grosir(nama_pelanggan):
         return 1600  # Pelanggan Umum
 
 def buat_keyboard_menu_utama():
-    """Buat keyboard menu utama 2 kolom"""
     keyboard = [
         [
             InlineKeyboardButton("📝 JUAL", callback_data="menu_jual"),
@@ -198,89 +197,118 @@ def buat_keyboard_menu_utama():
     return InlineKeyboardMarkup(keyboard)
 
 def buat_keyboard_pelanggan():
-    """Buat keyboard pilihan pelanggan dengan 2 kolom"""
-    
     keyboard = []
-    
-    # Membuat tombol dalam 2 kolom
-    for i in range(0, len(DAFTAR_PELANGGAN), 2):
-        row = []
-        # Tombol pertama di baris
-        row.append(InlineKeyboardButton(
-            f"{i+1}. {DAFTAR_PELANGGAN[i]}", 
-            callback_data=f"pelanggan_{i+1}"
-        ))
-        
-        # Tombol kedua di baris (jika ada)
-        if i + 1 < len(DAFTAR_PELANGGAN):
-            row.append(InlineKeyboardButton(
-                f"{i+2}. {DAFTAR_PELANGGAN[i+1]}", 
-                callback_data=f"pelanggan_{i+2}"
-            ))
-        
+    row = []
+
+    for i, pelanggan in enumerate(DAFTAR_PELANGGAN, 1):
+        row.append(
+            InlineKeyboardButton(
+                f"{pelanggan}",
+                callback_data=f"pelanggan_{i}"
+            )
+        )
+        if len(row) == 2:
+            keyboard.append(row)
+            row = []
+
+    if row:  # jika ganjil
         keyboard.append(row)
-    
-    # Tambahkan tombol cancel di baris terakhir
+
     keyboard.append([InlineKeyboardButton("🚫 Batalkan", callback_data="cancel")])
-    
+
     return InlineKeyboardMarkup(keyboard)
 
 def buat_keyboard_barang_penjualan(nama_pelanggan=""):
-    """Buat keyboard pilihan barang penjualan dengan harga otomatis"""
     keyboard = []
+    row = []
+
     for i, barang in enumerate(DAFTAR_BARANG_PENJUALAN, 1):
-        if barang == "Kacang Bawang Renceng Grosir" and nama_pelanggan:
+
+        if barang == "Kacang Bawang Renceng Grosir":
             harga = get_harga_renceng_grosir(nama_pelanggan)
-            button_text = f"{i}. {barang} - {format_rupiah(harga)}"
+            label = f"{barang}\n{format_rupiah(harga)}"
         else:
-            button_text = f"{i}. {barang}"
-        keyboard.append([InlineKeyboardButton(button_text, callback_data=f"barang_jual_{i}")])
+            label = barang
+
+        row.append(
+            InlineKeyboardButton(
+                label,
+                callback_data=f"barang_jual_{i}"
+            )
+        )
+
+        if len(row) == 2:
+            keyboard.append(row)
+            row = []
+
+    if row:
+        keyboard.append(row)
+
     keyboard.append([InlineKeyboardButton("🚫 Batalkan", callback_data="cancel")])
     return InlineKeyboardMarkup(keyboard)
 
 def buat_keyboard_barang_belanja():
-    """Buat keyboard pilihan barang belanja"""
     keyboard = []
+    row = []
+
     for i, barang in enumerate(DAFTAR_BARANG_BELANJA, 1):
-        keyboard.append([InlineKeyboardButton(f"{i}. {barang}", callback_data=f"barang_beli_{i}")])
+        row.append(
+            InlineKeyboardButton(
+                barang,
+                callback_data=f"barang_beli_{i}"
+            )
+        )
+        if len(row) == 2:
+            keyboard.append(row)
+            row = []
+
+    if row:
+        keyboard.append(row)
+
     keyboard.append([InlineKeyboardButton("🚫 Batalkan", callback_data="cancel")])
     return InlineKeyboardMarkup(keyboard)
 
-def buat_keyboard_pembayaran(total_setelah_retur):
-    """Buat keyboard pilihan nominal pembayaran"""
+def buat_keyboard_pembayaran(total):
     keyboard = []
-    
-    # Pilihan sesuai total
-    keyboard.append([InlineKeyboardButton(f"💰 Bayar Pas: {format_rupiah(total_setelah_retur)}", 
-                                        callback_data=f"bayar_pas_{total_setelah_retur}")])
-    
-    # Pilihan nominal umum
-    nominal_umum = [
-        total_setelah_retur + 5000,
-        total_setelah_retur + 10000,
-        total_setelah_retur + 20000,
-        total_setelah_retur + 50000,
+
+    keyboard.append([
+        InlineKeyboardButton(
+            f"💰 Bayar Pas\n{format_rupiah(total)}",
+            callback_data=f"bayar_pas_{total}"
+        )
+    ])
+
+    nominal_list = [
+        total + 5000,
+        total + 10000,
+        total + 20000,
+        total + 50000,
         100000,
         200000
     ]
-    
-    # Buat 2 kolom untuk nominal umum
+
     row = []
-    for nominal in nominal_umum:
-        if nominal > total_setelah_retur:
-            row.append(InlineKeyboardButton(f"💵 {format_rupiah(nominal)}", 
-                                          callback_data=f"bayar_nominal_{nominal}"))
-            if len(row) == 2:
-                keyboard.append(row)
-                row = []
-    
-    if row:  # Tambahkan sisa jika ada
+    for nominal in nominal_list:
+        row.append(
+            InlineKeyboardButton(
+                format_rupiah(nominal),
+                callback_data=f"bayar_nominal_{nominal}"
+            )
+        )
+        if len(row) == 2:
+            keyboard.append(row)
+            row = []
+
+    if row:
         keyboard.append(row)
-    
-    # Input manual
-    keyboard.append([InlineKeyboardButton("⌨️ Input Manual", callback_data="bayar_manual")])
-    keyboard.append([InlineKeyboardButton("🚫 Batalkan", callback_data="cancel")])
-    
+
+    keyboard.append([
+        InlineKeyboardButton("⌨️ Input Manual", callback_data="bayar_manual")
+    ])
+    keyboard.append([
+        InlineKeyboardButton("🚫 Batalkan", callback_data="cancel")
+    ])
+
     return InlineKeyboardMarkup(keyboard)
 
 def buat_keyboard_histori_pelanggan():
