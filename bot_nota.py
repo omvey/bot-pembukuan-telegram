@@ -171,8 +171,8 @@ def buat_nomor_nota(prefix="BDP"):
     nomor_acak = random.randint(1, 999)
     return f"{prefix}-{tanggal}-{bulan}-{tahun}-{nomor_acak:03d}"
 
-def get_harga_renceng_grosir(nama_pelanggan):
-    """Tentukan harga Kacang Bawang Renceng Grosir berdasarkan pelanggan"""
+def get_harga_renceng(nama_pelanggan):
+    """Tentukan harga Kacang Bawang Renceng berdasarkan pelanggan"""
     if "ASEP R" in nama_pelanggan.upper():
         return 1050
     elif "UJANG" in nama_pelanggan.upper():
@@ -229,8 +229,8 @@ def buat_keyboard_barang_penjualan(nama_pelanggan=""):
     """Buat keyboard pilihan barang penjualan dengan harga otomatis"""
     keyboard = []
     for i, barang in enumerate(DAFTAR_BARANG_PENJUALAN, 1):
-        if barang == "Kacang Bawang Renceng Grosir" and nama_pelanggan:
-            harga = get_harga_renceng_grosir(nama_pelanggan)
+        if barang == "Kacang Bawang Renceng" and nama_pelanggan:
+            harga = get_harga_renceng(nama_pelanggan)
             button_text = f"{i}. {barang} - {format_rupiah(harga)}"
         else:
             button_text = f"{i}. {barang}"
@@ -522,8 +522,7 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await query.edit_message_text(
             """*           𝙱𝙾𝚃 𝙼𝙰𝙽𝙰𝙹𝙴𝙼𝙴𝙽 𝙺𝙴𝚄𝙰𝙽𝙶𝙰𝙽        *
                 *𝗕𝗘𝗥𝗞𝗔𝗛 𝗗𝗨𝗔 𝗣𝗨𝗧𝗥𝗜*\n\n"""
-            "*Nama Pelanggan :*\n"
-            f"*{nama_pelanggan}*\n\n"
+            f"*Nama Pelanggan    : {nama_pelanggan}*\n\n"
             "📦 Pilih barang",
             parse_mode='Markdown',
             reply_markup=buat_keyboard_barang_penjualan(nama_pelanggan)
@@ -534,10 +533,10 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         barang_index = int(callback_data.split('_')[2]) - 1
         nama_barang = DAFTAR_BARANG_PENJUALAN[barang_index]
         
-        # Tentukan harga otomatis untuk Kacang Bawang Renceng Grosir
-        if nama_barang == "Kacang Bawang Renceng Grosir":
+        # Tentukan harga otomatis untuk Kacang Bawang Renceng
+        if nama_barang == "Kacang Bawang Renceng":
             nama_pelanggan = session['data']['nama_pelanggan']
-            harga_otomatis = get_harga_renceng_grosir(nama_pelanggan)
+            harga_otomatis = get_harga_renceng(nama_pelanggan)
             session['data']['current_item'] = {
                 'nama': nama_barang,
                 'harga': harga_otomatis
@@ -897,7 +896,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
     
     elif state == 'input_harga_barang':
-        # Simpan harga barang penjualan (untuk barang selain Kacang Bawang Renceng Grosir)
+        # Simpan harga barang penjualan (untuk barang selain Kacang Bawang Renceng)
         try:
             harga = int(message_text.replace(".", "").replace(",", ""))
             session['data']['current_item']['harga'] = harga
