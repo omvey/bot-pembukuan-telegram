@@ -451,9 +451,10 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             }
             
             await query.edit_message_text(
-                "*======BUAT NOTA PENJUALAN======*\n"
-                "*===Kacang Bawang Berkah Dua Putri===*\n\n"
-                "Pilih nama pelanggan",
+                "*           𝙱𝙾𝚃 𝙼𝙰𝙽𝙰𝙹𝙴𝙼𝙴𝙽 𝙺𝙴𝚄𝙰𝙽𝙶𝙰𝙽        *"
+                "*               𝗕𝗘𝗥𝗞𝗔𝗛 𝗗𝗨𝗔 𝗣𝗨𝗧𝗥𝗜          *\n"
+                "*BUAT NOTA PENJUALAN*\n"
+                "Pilih Nama Pelanggan",
                 parse_mode='Markdown',
                 reply_markup=buat_keyboard_pelanggan()
             )
