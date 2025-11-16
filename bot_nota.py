@@ -207,14 +207,14 @@ def buat_keyboard_pelanggan():
         row = []
         # Tombol pertama di baris
         row.append(InlineKeyboardButton(
-            f"{i+1}. {DAFTAR_PELANGGAN[i]}", 
+            f"{DAFTAR_PELANGGAN[i]}", 
             callback_data=f"pelanggan_{i+1}"
         ))
         
         # Tombol kedua di baris (jika ada)
         if i + 1 < len(DAFTAR_PELANGGAN):
             row.append(InlineKeyboardButton(
-                f"{i+2}. {DAFTAR_PELANGGAN[i+1]}", 
+                f"{DAFTAR_PELANGGAN[i+1]}", 
                 callback_data=f"pelanggan_{i+2}"
             ))
         
@@ -231,9 +231,9 @@ def buat_keyboard_barang_penjualan(nama_pelanggan=""):
     for i, barang in enumerate(DAFTAR_BARANG_PENJUALAN, 1):
         if barang == "Kc Bawang Renceng" and nama_pelanggan:
             harga = get_harga_renceng(nama_pelanggan)
-            button_text = f"{i}. {barang} - {format_rupiah(harga)}"
+            button_text = f"{barang} - {format_rupiah(harga)}"
         else:
-            button_text = f"{i}. {barang}"
+            button_text = f"{barang}"
         keyboard.append([InlineKeyboardButton(button_text, callback_data=f"barang_jual_{i}")])
     keyboard.append([InlineKeyboardButton("🚫 Batalkan", callback_data="cancel")])
     return InlineKeyboardMarkup(keyboard)
