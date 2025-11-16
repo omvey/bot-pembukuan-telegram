@@ -544,9 +544,12 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             session['state'] = 'input_qty_barang'
             
             await query.edit_message_text(
-                f"📦 *Barang:* {nama_barang}\n"
-                f"💰 *Harga Otomatis:* {format_rupiah(harga_otomatis)}\n\n"
-                "Masukkan jumlah barang:",
+                """*           𝙱𝙾𝚃 𝙼𝙰𝙽𝙰𝙹𝙴𝙼𝙴𝙽 𝙺𝙴𝚄𝙰𝙽𝙶𝙰𝙽        *
+                *𝗕𝗘𝗥𝗞𝗔𝗛 𝗗𝗨𝗔 𝗣𝗨𝗧𝗥𝗜*\n\n"""
+                "📦 *Barang dipilih :*"
+                f"*{nama_barang}*\n"
+                f"💰 *Harga Otomatis :* {format_rupiah(harga_otomatis)}\n\n"
+                "Masukkan jumlah barang :",
                 parse_mode='Markdown'
             )
         else:
@@ -931,8 +934,9 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             
             # Tampilkan ringkasan sementara
             total_sementara = sum(item['subtotal'] for item in session['data']['daftar_barang'])
-            
-            summary_text = f"✅ *Barang ditambahkan:*\n{current_item['nama']}\nQty: {qty} x {format_rupiah(current_item['harga'])} = {format_rupiah(current_item['subtotal'])}\n\n"
+            summary_text = """*           𝙱𝙾𝚃 𝙼𝙰𝙽𝙰𝙹𝙴𝙼𝙴𝙽 𝙺𝙴𝚄𝙰𝙽𝙶𝙰𝙽        *
+                *𝗕𝗘𝗥𝗞𝗔𝗛 𝗗𝗨𝗔 𝗣𝗨𝗧𝗥𝗜*\n\n"""
+            summary_text += f"Barang ditambahkan :*\n{current_item['nama']}\n{qty} pcs x {format_rupiah(current_item['harga'])} = {format_rupiah(current_item['subtotal'])}\n\n"
             summary_text += f"💰 *Total sementara:* {format_rupiah(total_sementara)}\n\n"
             summary_text += "Pilih opsi di bawah:"
             
