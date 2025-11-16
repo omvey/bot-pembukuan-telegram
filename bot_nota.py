@@ -598,7 +598,7 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         summary_text += "*RINGKASAN NOTA PENJUALAN*\n\n"
         for item in session['data']['daftar_barang']:
             summary_text += f"• {item['qty']} x {item['nama']}\n"
-            summary_text += f"                {format_rupiah(item['subtotal'])}\n"
+            summary_text += f"      {format_rupiah(item['subtotal'])}\n"
         
         if session['data']['retur_items']:
             summary_text += "\n🔄 *BARANG RETUR:*\n"
