@@ -24,8 +24,7 @@ logger = logging.getLogger(__name__)
 # ===============================
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "Selamat datang di Bot Nota!
-"
+        "Selamat datang di Bot Nota!"
         "Perintah yang tersedia:\n"
         "• /buatnota <nama> <barang> <bayar>\n"
         "   Contoh: /buatnota Budi 'Kc Bwg Renceng:2,Kc Bwg Toples 1 Kg:1' 100000\n\n"
