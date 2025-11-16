@@ -451,7 +451,7 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             }
             
             await query.edit_message_text(
-                """*           𝙱𝙾𝚃 𝙼𝙰𝙽𝙰𝙹𝙴𝙼𝙴𝙽 𝙺𝙴𝚄𝙰𝙽𝙶𝙰𝙽        *\n*               𝗕𝗘𝗥𝗞𝗔𝗛 𝗗𝗨𝗔 𝗣𝗨𝗧𝗥𝗜          *"""
+                """*           𝙱𝙾𝚃 𝙼𝙰𝙽𝙰𝙹𝙴𝙼𝙴𝙽 𝙺𝙴𝚄𝙰𝙽𝙶𝙰𝙽        *\n*               𝗕𝗘𝗥𝗞𝗔𝗛 𝗗𝗨𝗔 𝗣𝗨𝗧𝗥𝗜          *\n\n"""
                 "*BUAT NOTA PENJUALAN*\n\n"
                 "Pilih Nama Pelanggan",
                 parse_mode='Markdown',
@@ -519,8 +519,7 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         session['state'] = 'pilih_barang_penjualan'
         
         await query.edit_message_text(
-            """*           𝙱𝙾𝚃 𝙼𝙰𝙽𝙰𝙹𝙴𝙼𝙴𝙽 𝙺𝙴𝚄𝙰𝙽𝙶𝙰𝙽        *
-                *𝗕𝗘𝗥𝗞𝗔𝗛 𝗗𝗨𝗔 𝗣𝗨𝗧𝗥𝗜*\n\n"""
+            """*           𝙱𝙾𝚃 𝙼𝙰𝙽𝙰𝙹𝙴𝙼𝙴𝙽 𝙺𝙴𝚄𝙰𝙽𝙶𝙰𝙽        *\n*               𝗕𝗘𝗥𝗞𝗔𝗛 𝗗𝗨𝗔 𝗣𝗨𝗧𝗥𝗜          *\n\n"""
             f"*Nama Pelanggan    : {nama_pelanggan}*\n\n"
             "📦 Pilih barang",
             parse_mode='Markdown',
@@ -543,8 +542,7 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             session['state'] = 'input_qty_barang'
             
             await query.edit_message_text(
-                """*           𝙱𝙾𝚃 𝙼𝙰𝙽𝙰𝙹𝙴𝙼𝙴𝙽 𝙺𝙴𝚄𝙰𝙽𝙶𝙰𝙽        *
-                *𝗕𝗘𝗥𝗞𝗔𝗛 𝗗𝗨𝗔 𝗣𝗨𝗧𝗥𝗜*\n\n"""
+                """*           𝙱𝙾𝚃 𝙼𝙰𝙽𝙰𝙹𝙴𝙼𝙴𝙽 𝙺𝙴𝚄𝙰𝙽𝙶𝙰𝙽        *\n*               𝗕𝗘𝗥𝗞𝗔𝗛 𝗗𝗨𝗔 𝗣𝗨𝗧𝗥𝗜          *\n\n"""
                 "📦 *Barang dipilih :*"
                 f"*{nama_barang}*\n"
                 f"💰 *Harga Otomatis :* {format_rupiah(harga_otomatis)}\n\n"
