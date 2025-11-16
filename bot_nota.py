@@ -407,8 +407,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     }
     
     welcome_text = """
-*         MANAJEMEN KEUANGAN          *
-*   Kacang Bawang Berkah Dua Putri    *
+*         BOT MANAJEMEN KEUANGAN        *
+*     Kacang Bawang Berkah Dua Putri    *
+*===========================*
 """
     
     await update.message.reply_text(
