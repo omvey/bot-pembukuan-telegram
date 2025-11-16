@@ -597,7 +597,7 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         summary_text = """*           𝙱𝙾𝚃 𝙼𝙰𝙽𝙰𝙹𝙴𝙼𝙴𝙽 𝙺𝙴𝚄𝙰𝙽𝙶𝙰𝙽        *\n*               𝗕𝗘𝗥𝗞𝗔𝗛 𝗗𝗨𝗔 𝗣𝗨𝗧𝗥𝗜          *\n\n"""
         summary_text += "*RINGKASAN NOTA PENJUALAN*\n\n"
         for item in session['data']['daftar_barang']:
-            summary_text += f"• {item['qty']} x {item['nama']}"
+            summary_text += f"• {item['qty']} x {item['nama']}\n"
             summary_text += f"                {format_rupiah(item['subtotal'])}\n"
         
         if session['data']['retur_items']:
@@ -605,7 +605,7 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             for item in session['data']['retur_items']:
                 summary_text += f"• {item['qty']}x {item['nama']} = {format_rupiah(item['subtotal'])}\n"
         
-        summary_text += f"\n💰 *TOTAL: {format_rupiah(total_setelah_retur)}*\n\n"
+        summary_text += f"\n*TOTAL {format_rupiah(total_setelah_retur)}*\n\n"
         summary_text += "Pilih nominal pembayaran:"
         
         await query.edit_message_text(
