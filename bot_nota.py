@@ -172,7 +172,7 @@ def buat_nomor_nota(prefix="BDP"):
     return f"{prefix}-{tanggal}-{bulan}-{tahun}-{nomor_acak:03d}"
 
 def get_harga_renceng(nama_pelanggan):
-    """Tentukan harga Kacang Bawang Renceng berdasarkan pelanggan"""
+    """Tentukan harga Kc Bawang Renceng berdasarkan pelanggan"""
     if "ASEP R" in nama_pelanggan.upper():
         return 1050
     elif "UJANG" in nama_pelanggan.upper():
@@ -229,7 +229,7 @@ def buat_keyboard_barang_penjualan(nama_pelanggan=""):
     """Buat keyboard pilihan barang penjualan dengan harga otomatis"""
     keyboard = []
     for i, barang in enumerate(DAFTAR_BARANG_PENJUALAN, 1):
-        if barang == "Kacang Bawang Renceng" and nama_pelanggan:
+        if barang == "Kc Bawang Renceng" and nama_pelanggan:
             harga = get_harga_renceng(nama_pelanggan)
             button_text = f"{i}. {barang} - {format_rupiah(harga)}"
         else:
@@ -533,8 +533,8 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         barang_index = int(callback_data.split('_')[2]) - 1
         nama_barang = DAFTAR_BARANG_PENJUALAN[barang_index]
         
-        # Tentukan harga otomatis untuk Kacang Bawang Renceng
-        if nama_barang == "Kacang Bawang Renceng":
+        # Tentukan harga otomatis untuk Kc Bawang Renceng
+        if nama_barang == "Kc Bawang Renceng":
             nama_pelanggan = session['data']['nama_pelanggan']
             harga_otomatis = get_harga_renceng(nama_pelanggan)
             session['data']['current_item'] = {
@@ -896,7 +896,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
     
     elif state == 'input_harga_barang':
-        # Simpan harga barang penjualan (untuk barang selain Kacang Bawang Renceng)
+        # Simpan harga barang penjualan (untuk barang selain Kc Bawang Renceng)
         try:
             harga = int(message_text.replace(".", "").replace(",", ""))
             session['data']['current_item']['harga'] = harga
