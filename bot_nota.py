@@ -520,8 +520,11 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         session['state'] = 'pilih_barang_penjualan'
         
         await query.edit_message_text(
-            f"👤 *Pelanggan:* {nama_pelanggan}\n\n"
-            "📦 Pilih barang yang dijual:",
+            """*           𝙱𝙾𝚃 𝙼𝙰𝙽𝙰𝙹𝙴𝙼𝙴𝙽 𝙺𝙴𝚄𝙰𝙽𝙶𝙰𝙽        *
+                *𝗕𝗘𝗥𝗞𝗔𝗛 𝗗𝗨𝗔 𝗣𝗨𝗧𝗥𝗜*\n\n"""
+            "*Nama Pelanggan :*\n"
+            f"*{nama_pelanggan}*\n\n"
+            "📦 Pilih barang",
             parse_mode='Markdown',
             reply_markup=buat_keyboard_barang_penjualan(nama_pelanggan)
         )
