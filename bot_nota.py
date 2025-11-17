@@ -180,9 +180,6 @@ def get_harga_renceng(nama_pelanggan):
     else:
         return 1600  # Pelanggan Umum
 
-def header_pesan():
-    f"*           𝙱𝙾𝚃 𝙼𝙰𝙽𝙰𝙹𝙴𝙼𝙴𝙽 𝙺𝙴𝚄𝙰𝙽𝙶𝙰𝙽        *\n*               𝗕𝗘𝗥𝗞𝗔𝗛 𝗗𝗨𝗔 𝗣𝗨𝗧𝗥𝗜          *\n──────────────────────────\n\n"
-
 def buat_keyboard_menu_utama():
     """Buat keyboard menu utama 2 kolom"""
     keyboard = [
@@ -406,7 +403,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         'state': 'idle',
         'data': {}
     }
-    welcome_text = header_pesan
+    welcome_text = "*           𝙱𝙾𝚃 𝙼𝙰𝙽𝙰𝙹𝙴𝙼𝙴𝙽 𝙺𝙴𝚄𝙰𝙽𝙶𝙰𝙽        *\n*               𝗕𝗘𝗥𝗞𝗔𝗛 𝗗𝗨𝗔 𝗣𝗨𝗧𝗥𝗜          *\n──────────────────────────\n\n"
     welcome_text += "Silahkan Pilih Menu dibawah"
     
     await update.message.reply_text(
