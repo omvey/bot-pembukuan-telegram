@@ -317,7 +317,7 @@ def format_nota_penjualan(data):
             nota_text += f"     {qty} @ {harga_satuan:>12} = {subtotal:>12}\n"
     
     # Ringkasan pembayaran
-    nota_text += "\n" + "─" * 40 + "\n"
+    nota_text += "\n" + "─" * 26 + "\n"
     nota_text += "💰 *RINGKASAN PEMBAYARAN:*\n"
     
     # Hitung total
@@ -362,7 +362,7 @@ def format_nota_belanja(data):
     nota_text += f"📋 *No: {data['nomor_nota']}*\n"
     nota_text += f"🏢 *Supplier: {data['nama_supplier']}*\n"
     nota_text += f"📅 *Tanggal: {data['tanggal']}*\n"
-    nota_text += "─" * 40 + "\n\n"
+    nota_text += "─" * 26 + "\n\n"
     
     # Header tabel barang
     nota_text += "📦 *DAFTAR BARANG:*\n"
@@ -379,7 +379,7 @@ def format_nota_belanja(data):
         nota_text += f"     {qty} @ {harga_satuan:>12} = {subtotal:>12}\n"
     
     # Ringkasan
-    nota_text += "\n" + "─" * 40 + "\n"
+    nota_text += "\n" + "─" * 26 + "\n"
     nota_text += "💰 *RINGKASAN BELANJA:*\n"
     
     total_belanja = sum(item['subtotal'] for item in data['daftar_barang'])
