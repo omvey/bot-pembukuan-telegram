@@ -407,9 +407,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     welcome_text = """
 *           𝙱𝙾𝚃 𝙼𝙰𝙽𝙰𝙹𝙴𝙼𝙴𝙽 𝙺𝙴𝚄𝙰𝙽𝙶𝙰𝙽        *
 *               𝗕𝗘𝗥𝗞𝗔𝗛 𝗗𝗨𝗔 𝗣𝗨𝗧𝗥𝗜          *
-
-Silahkan Pilih Menu dibawah
 """
+    welcome_text += "─" * 26 + "\n\n"
+    welcome_text += "Silahkan Pilih Menu dibawah"
     
     await update.message.reply_text(
         welcome_text, 
