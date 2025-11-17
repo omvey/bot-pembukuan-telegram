@@ -450,7 +450,7 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             
             await query.edit_message_text(
                 """*           𝙱𝙾𝚃 𝙼𝙰𝙽𝙰𝙹𝙴𝙼𝙴𝙽 𝙺𝙴𝚄𝙰𝙽𝙶𝙰𝙽        *\n*               𝗕𝗘𝗥𝗞𝗔𝗛 𝗗𝗨𝗔 𝗣𝗨𝗧𝗥𝗜          *\n"""
-                "─" * 26 + "\n\n"
+                "────────────────────────── \n\n"
                 "*BUAT NOTA PENJUALAN*\n\n"
                 "Pilih Nama Pelanggan",
                 parse_mode='Markdown',
@@ -519,7 +519,7 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         
         await query.edit_message_text(
             """*           𝙱𝙾𝚃 𝙼𝙰𝙽𝙰𝙹𝙴𝙼𝙴𝙽 𝙺𝙴𝚄𝙰𝙽𝙶𝙰𝙽        *\n*               𝗕𝗘𝗥𝗞𝗔𝗛 𝗗𝗨𝗔 𝗣𝗨𝗧𝗥𝗜          *\n"""
-            "─" * 26 + "\n\n"
+            "────────────────────────── \n\n"
             f"*Nama Pelanggan : {nama_pelanggan}*\n\n"
             "📦 Pilih barang",
             parse_mode='Markdown',
@@ -543,7 +543,7 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             
             await query.edit_message_text(
                 """*           𝙱𝙾𝚃 𝙼𝙰𝙽𝙰𝙹𝙴𝙼𝙴𝙽 𝙺𝙴𝚄𝙰𝙽𝙶𝙰𝙽        *\n*               𝗕𝗘𝗥𝗞𝗔𝗛 𝗗𝗨𝗔 𝗣𝗨𝗧𝗥𝗜          *\n"""
-                "─" * 26 + "\n\n"
+                "────────────────────────── \n\n"
                 "📦 *Barang dipilih :*"
                 f"*{nama_barang}*\n"
                 f"💰 *Harga Otomatis :* {format_rupiah(harga_otomatis)}\n\n"
