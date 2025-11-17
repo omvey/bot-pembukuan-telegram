@@ -406,7 +406,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         'state': 'idle',
         'data': {}
     }
-    welcome_text = f"{header_pesan}"
+    welcome_text = header_pesan
     welcome_text += "Silahkan Pilih Menu dibawah"
     
     await update.message.reply_text(
